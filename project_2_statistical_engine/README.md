@@ -34,7 +34,7 @@ Primary inference is performed at the **mouse level**, with session-level analys
 
 ---
 
-## 📈 Statistical Methods
+##  Statistical Methods
 
 ### Mixed-Effects Modeling
 - Linear mixed-effects models
@@ -100,5 +100,6 @@ src/
 This engine transforms raw behavioral measurements into **statistically defensible insights**, aligning with best practices in neuroscience, biostatistics, and data science.
 
 It is designed to scale to additional features, contexts, and future multimodal integration.
+
 
 

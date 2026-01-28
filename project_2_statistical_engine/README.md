@@ -76,7 +76,7 @@ Outputs are written to structured folders for downstream visualization and inter
 ---
 
 ##  Implementation (Planned)
-
+```text
 src/
 ├── build_summary_tables.py
 ├── mixed_effects_models.py
@@ -84,7 +84,7 @@ src/
 ├── effect_sizes.py
 └── generate_reports.py
 
-
+```
 ---
 
 ##  Key Questions Addressed
@@ -100,6 +100,7 @@ src/
 This engine transforms raw behavioral measurements into **statistically defensible insights**, aligning with best practices in neuroscience, biostatistics, and data science.
 
 It is designed to scale to additional features, contexts, and future multimodal integration.
+
 
 
 

@@ -16,7 +16,7 @@ Project 1 does **not** perform inference. Its role is to ensure that all downstr
 
 ---
 
-## 📥 Input Data
+##  Input Data
 
 ### Primary Input
 - `merged_vocalmat.xlsx`
@@ -31,7 +31,7 @@ Each row represents **one ultrasonic vocalization (call)** extracted using Vocal
 
 ---
 
-## 🧬 Experimental Hierarchy (Locked)
+##  Experimental Hierarchy (Locked)
 
 Project 1 explicitly defines the hierarchy used throughout the platform:
 
@@ -144,3 +144,4 @@ These outputs are the **only allowed inputs** to downstream projects.
 Project 1 prevents pseudoreplication, silent data leakage, and assumption drift. It establishes a transparent foundation that allows all downstream analyses to be interpreted with confidence.
 
 This module is the **scientific backbone** of the platform.
+

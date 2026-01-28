@@ -48,7 +48,7 @@ Explicit social interaction context (e.g., female, male, bully) is **not assumed
 
 ---
 
-## 📐 Canonical Schema
+##  Canonical Schema
 
 Project 1 enforces required columns, data types, and units. Example categories include:
 
@@ -144,4 +144,5 @@ These outputs are the **only allowed inputs** to downstream projects.
 Project 1 prevents pseudoreplication, silent data leakage, and assumption drift. It establishes a transparent foundation that allows all downstream analyses to be interpreted with confidence.
 
 This module is the **scientific backbone** of the platform.
+
 

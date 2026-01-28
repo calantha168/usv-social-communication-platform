@@ -19,7 +19,7 @@ This platform was designed to:
 ## Platform Architecture
 
 The repository is organized as a **multi-project ecosystem**, where each project can stand alone while contributing to a unified analysis pipeline.
-
+```text
 USV-Social-Communication-Platform/
 │
 ├── project_1_data_intake/ # Data ingestion & cleaning
@@ -32,7 +32,7 @@ USV-Social-Communication-Platform/
 ├── shared/ # Common utilities, schemas, configs
 ├── data/ # Data access rules & documentation
 └── README.md
-
+```
 
 ---
 

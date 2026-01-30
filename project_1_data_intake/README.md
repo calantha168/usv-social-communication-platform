@@ -145,6 +145,7 @@ Project 1 prevents pseudoreplication, silent data leakage, and assumption drift.
 
 This module is the **scientific backbone** of the platform.
 
+All downstream statistical analyses (Project 2) only operate on tables that pass this validation layer, preventing pseudoreplication and invalid inference.
 
 
 

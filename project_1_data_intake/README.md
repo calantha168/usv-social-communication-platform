@@ -4,16 +4,6 @@ This module defines the **data contract** for the USV Social Communication Platf
 
 Project 1 does **not** perform inference. Its role is to ensure that all downstream analyses are reproducible, interpretable, and scientifically defensible.
 
-PROJECT 1 — Data Intake + Schema Validation (Reproducible QC Layer)
-
-Built a schema-driven validation system that enforces analysis-table integrity before any modeling:
-required columns, dtypes, null policies, valid ranges, allowed categories, uniqueness/primary keys,
-and row-wise logical constraints (e.g., End_time >= Start_time, Duration >= 0). This prevents silent
-data corruption, reduces analyst time lost to debugging, and enables reliable downstream inference
-(mixed-effects, nonparametric tests, dashboards) by ensuring call/session/mouse tables are clean,
-consistent, and audit-ready. Designed to run locally, in CI, or as an Airflow gate.
-
-
 ---
 
 ##  Objectives
@@ -154,6 +144,7 @@ These outputs are the **only allowed inputs** to downstream projects.
 Project 1 prevents pseudoreplication, silent data leakage, and assumption drift. It establishes a transparent foundation that allows all downstream analyses to be interpreted with confidence.
 
 This module is the **scientific backbone** of the platform.
+
 
 
 

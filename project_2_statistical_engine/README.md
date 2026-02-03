@@ -7,7 +7,9 @@ The focus is on **defensible statistical inference**, **effect size estimation**
 Project 2 serves as the **inferential core** of the USV Social Communication Platform.
 
 ---
-## “We explicitly avoid pseudoreplication using mixed-effects models as recommended by Zimmerman et al., Nature Communications (2021)”
+## Statistical validity & pseudoreplication control
+
+This project explicitly models hierarchical experimental structure using mixed-effects models to avoid pseudoreplication bias, following recommendations from Zimmerman et al. (Nature Communications, 2021).
 
 ## Key Design Constraint (Important)
 
@@ -175,4 +177,5 @@ project_2_statistical_engine/
 ├── docs/             # Inference policy and data dictionary
 └── tests/            # Smoke and validation tests
 ```
+
 

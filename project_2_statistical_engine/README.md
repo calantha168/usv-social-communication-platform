@@ -36,6 +36,8 @@ This approach is supported by prior research demonstrating that conventional cor
 • Mixed-effects models are used for all primary inference
 • Aggregated summaries are used only for visualization and reporting
 
+Because individual ultrasonic vocalizations cannot be attributed to specific animals, calls were treated as repeated measurements within interaction sessions. All statistical analyses were therefore conducted on session-level summaries to avoid pseudoreplication (Lazic et al., 2018). Group differences in call duration and frequency were assessed using Welch’s t-tests or Welch ANOVA, with Games–Howell post-hoc tests where appropriate
+
 ## Key Design Constraint (Important)
 
 In this dataset, **individual ultrasonic vocalizations cannot be attributed to a specific mouse** within an interaction.  
@@ -202,6 +204,7 @@ project_2_statistical_engine/
 ├── docs/             # Inference policy and data dictionary
 └── tests/            # Smoke and validation tests
 ```
+
 
 
 

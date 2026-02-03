@@ -11,6 +11,31 @@ Project 2 serves as the **inferential core** of the USV Social Communication Pla
 
 This project explicitly models hierarchical experimental structure using mixed-effects models to avoid pseudoreplication bias, following recommendations from Zimmerman et al. (Nature Communications, 2021).
 
+## Statistical Design & Methods Justification
+
+Ultrasonic vocalization (USV) datasets contain large numbers of individual calls produced by the same animals across sessions and social contexts. These calls are naturally correlated because they originate from the same mouse and experimental environment, and therefore cannot be treated as independent observations. Treating each call as a separate data point artificially inflates sample size and can lead to misleading statistical significance.
+
+To address this, Project 2 explicitly models the hierarchical structure of USV experiments, with calls nested within sessions and mice, and mice serving as the true independent experimental units for inference. This design follows modern best practices in neuroscience and single-cell research, where repeated measurements within subjects are accounted for using mixed-effects models.
+
+## Mixed-effects modeling allows the system to:
+
+• control for baseline differences between mice
+• incorporate session- and context-level variation
+• preserve within-mouse behavioral variability
+• avoid pseudoreplication and false discoveries
+
+Rather than relying on naive call-level statistical tests or simple averaging, the platform uses linear and generalized linear mixed-effects models to compare vocal behavior across genotype and social context while correctly handling repeated measures.
+
+This approach is supported by prior research demonstrating that conventional correlation and independent-sample methods overestimate effects in repeated-measure designs, while mixed-effects models produce more accurate and reproducible results in neuroscience and high-dimensional biological data.
+
+## Core Analytical Principles
+
+• Mice are treated as the primary experimental unit
+• Calls are treated as nested behavioral observations
+• Sessions and contexts are incorporated as grouping factors
+• Mixed-effects models are used for all primary inference
+• Aggregated summaries are used only for visualization and reporting
+
 ## Key Design Constraint (Important)
 
 In this dataset, **individual ultrasonic vocalizations cannot be attributed to a specific mouse** within an interaction.  
@@ -177,5 +202,6 @@ project_2_statistical_engine/
 ├── docs/             # Inference policy and data dictionary
 └── tests/            # Smoke and validation tests
 ```
+
 
 

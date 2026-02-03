@@ -1,27 +1,52 @@
 # Project 2 — Context & Genotype Statistical Analysis Engine
 
-This module implements a **statistically rigorous framework** to quantify how **genotype** and other experimental grouping factors influence ultrasonic vocal behavior in mouse models. The focus is on **defensible inference**, **effect size estimation**, and **reproducible reporting**, rather than ad-hoc or call-level comparisons.
+This module implements a **statistically rigorous framework** to quantify how **genotype, sex, and other dyad-level experimental factors** influence ultrasonic vocal behavior during mouse social interaction sessions.
 
-Project 2 serves as the **inferential core** of the USV Social Communication Platform, ensuring that all statistical conclusions respect the true experimental design and hierarchical structure of the data.
+The focus is on **defensible statistical inference**, **effect size estimation**, and **reproducible reporting**, rather than ad-hoc or call-level comparisons that violate independence assumptions.
 
-Importantly, this project **does not assume that social context is known a priori**. Context may be:
-- explicitly labeled (if available),
-- partially specified,
-- or inferred downstream from experimental metadata or behavioral structure.
+Project 2 serves as the **inferential core** of the USV Social Communication Platform.
+
+---
+
+## Key Design Constraint (Important)
+
+In this dataset, **individual ultrasonic vocalizations cannot be attributed to a specific mouse** within an interaction.  
+Each session represents a **dyadic interaction between two mice**, and calls are only known to occur *within that session*.
+
+As a result:
+
+- Calls are **not independent samples**
+- Mouse-level inference is **not valid**
+- The **interaction session (dyad)** is the experimental unit
+
+All statistical logic in this project is built around this constraint.
 
 ---
 
 ## Objectives
 
-The primary objectives of this project are to:
+The primary objectives of Project 2 are to:
 
 - Enforce correct **experimental units** and prevent pseudoreplication  
-- Encode the **hierarchical structure** of USV data (call → session → mouse → genotype)  
+- Encode the **true hierarchical structure** of the data (call → session)  
 - Support analysis with **known, unknown, or inferred contextual variables**  
 - Separate **exploratory analysis** from **formal hypothesis testing**  
-- Produce **analysis-ready summary tables** at appropriate aggregation levels  
-- Enable statistically valid comparisons across genotype and other grouping factors  
-- Support transparent, reproducible, and reviewer-defensible inference  
+- Produce **analysis-ready summary tables** at valid aggregation levels  
+- Enable statistically valid comparisons across **genotype and sex compositions**  
+- Ensure all results are **transparent, reproducible, and reviewer-defensible**
+
+---
+
+## Data Hierarchy
+
+The hierarchy used in Project 2 reflects the data-generating process:
+
+Call -> Session (Dyadic Interaction)
+
+- **Call**: individual detected ultrasonic vocalization  
+- **Session**: interaction between two mice (dyad)  
+
+Genotype and sex are treated as **dyad-level attributes**, not nesting levels.
 
 ---
 
@@ -29,25 +54,25 @@ The primary objectives of this project are to:
 
 This engine is designed to address questions such as:
 
-- Do different **genotypes** exhibit distinct vocalization patterns?
-- How does vocal behavior vary **within and across individual mice**?
-- Which acoustic features differ most strongly across experimental groups?
-- Are observed effects robust at the **mouse (experimental unit) level**, rather than driven by call counts?
+- Do interaction sessions with different **genotype compositions** (e.g., WT–WT vs WT–KO) differ in vocal behavior?
+- Do **sex compositions** (MM, MF, FF) influence vocal duration or frequency?
+- Which acoustic features (e.g., duration, frequency) show the strongest differences across dyad types?
+- Are observed effects robust at the **session level**, rather than driven by call counts?
 - How do results change when additional contextual variables are introduced or inferred?
 
 ---
 
 ## Input Data
 
-Project 2 consumes a **canonical, analysis-ready call-level dataset** produced upstream in Project 1 (Phase 1.0).
+Project 2 consumes a **canonical, analysis-ready call-level dataset** produced upstream in **Project 1 (Phase 1.0)**.
 
-**Input characteristics:**
+### Input Characteristics
 - One row per detected call  
 - Schema-validated and metadata-joined  
 - No statistical aggregation applied  
 - Stored in a columnar format (e.g., Parquet)
 
-Contextual variables (e.g., social target, condition, arena state) are **optional** and may be added later without altering the core inference framework.
+Contextual variables (e.g., condition, arena state) are **optional** and may be added later without altering the inference framework.
 
 > Project 2 does **not** ingest raw Excel outputs directly.
 
@@ -55,44 +80,84 @@ Contextual variables (e.g., social target, condition, arena state) are **optiona
 
 ## Output Artifacts
 
-Project 2 produces three core analysis tables:
+Project 2 produces the following analysis tables:
 
-1. **Call-level table**
-   - Used for exploratory visualization and mixed-effects modeling only
-
-2. **Session-level summary table**
-   - Used for secondary inference, sensitivity analysis, and QC diagnostics
-
-3. **Mouse-level summary table (PRIMARY)**
-   - One row per mouse × grouping variables
-   - Used for hypothesis testing, effect size estimation, and final reporting
-
-Grouping variables may include genotype alone or genotype combined with contextual factors when available.
+### 1. Call-Level Table
+- Grain: **one row per call**
+- Used for:
+  - Exploratory visualization
+  - Distributional inspection
+  - Optional mixed-effects modeling with session as a random effect
+- **Not used** for hypothesis testing assuming independence
 
 ---
 
-## Statistical Design Principles
+### 2. Session-Level Summary Table (**PRIMARY**)
+- Grain: **one row per interaction session**
+- Used for:
+  - Hypothesis testing
+  - Effect size estimation
+  - Final reporting and figures
 
-### Data Hierarchy
+Typical session-level metrics include:
+- Number of calls per session
+- Mean and median call duration
+- Mean call frequency
+- Proportion of harmonic or noisy calls
+- Call class composition (optional)
 
-Call -> Session -> Mouse -> Genotype
+---
 
+### 3. Dyad-Type Summary Table (Optional)
+- Grain: **genotype/sex composition**
+- Used for descriptive summaries across sessions only
 
-### Units of Inference
+---
 
-| Level   | Intended Use |
-|--------|--------------|
-| Call   | Exploratory analysis only |
-| Session| Secondary / robustness checks |
-| Mouse  | **Primary experimental unit** |
+## Statistical Analysis Plan
 
-### Hard Constraints
+### Experimental Unit
+- **Primary unit:** session (dyadic interaction)
 
-- No hypothesis testing treating calls as independent samples  
-- Call-level modeling requires random effects  
-- Mouse-level summaries are required for final inference  
+Calls within a session are treated as repeated measurements.
 
-These constraints apply **regardless of whether context is known**.
+---
+
+### Duration and Frequency (Continuous Outcomes)
+
+All tests are performed on **session-level summaries**.
+
+#### Two-Group Comparisons
+- **Welch’s t-test** (default)
+- **Mann–Whitney U** (nonparametric fallback)
+
+#### Three or More Groups
+- **Welch ANOVA** (default)
+- **Games–Howell** post-hoc tests
+- **Kruskal–Wallis** with **Dunn’s test** (nonparametric alternative)
+
+---
+
+### Call Counts per Session
+- **Negative Binomial regression** (preferred when overdispersed)
+- Welch-based tests on session counts (simpler alternative)
+
+---
+
+### Effect Sizes (Always Reported)
+- Cohen’s *d* / Hedges’ *g* (two groups)
+- η² / partial η² (ANOVA)
+- Rate ratios for count models
+- 95% confidence intervals where applicable
+
+---
+
+## Hard Constraints
+
+- No hypothesis testing on raw calls assuming independence  
+- Session is the experimental unit unless emitter identity becomes available  
+- Effect sizes accompany all p-values  
+- Social context is **not assumed** to exist  
 
 ---
 
@@ -100,44 +165,12 @@ These constraints apply **regardless of whether context is known**.
 
 ```text
 project_2_statistical_engine/
-├── schemas/ # Hierarchy definitions and table contracts
-├── src/stat_engine/ # Data loading, aggregation, QC, modeling
+├── schemas/          # Hierarchy and table contracts
+├── src/stat_engine/  # Loading, aggregation, QC, statistics
 ├── data/
-│ ├── raw/ # Placeholders only
-│ ├── derived/ # Analysis tables
-│ └── results/ # Statistical outputs
-├── docs/ # Inference policy and data dictionary
-└── tests/ # Smoke and validation tests
+│   ├── raw/          # Placeholders only
+│   ├── derived/      # Session-level analysis tables
+│   └── results/      # Statistical outputs and figures
+├── docs/             # Inference policy and data dictionary
+└── tests/            # Smoke and validation tests
 ```
-
----
-
-## Phase Overview
-
-### Phase 1.0 — Analysis-Ready Data (Upstream)
-- Merge and validate raw outputs  
-- Freeze call-level dataset  
-- No statistics performed  
-
----
-
-### Phase 2.0 — Hierarchy & Inference Lock-In
-- Declare hierarchy and experimental units  
-- Define analysis table contracts  
-- Remain agnostic to unknown or future context variables  
-
----
-
-### Phase 2.1+ — Modeling & Hypothesis Testing
-- Quality control and outlier policy  
-- Mixed-effects models and hypothesis tests  
-- Optional incorporation of contextual or inferred variables  
-- Effect sizes, figures, and reports  
-
----
-
-## Role in the Platform
-
-Project 2 provides the **scientific backbone** of the USV Social Communication Platform by bridging cleaned acoustic data and higher-level behavioral modeling. It ensures that all conclusions are statistically valid, reproducible, and extensible as new experimental context becomes available.
-
-
